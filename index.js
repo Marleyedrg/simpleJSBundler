@@ -1,3 +1,7 @@
-import {print} from "./module.js";
+(function() {
+  console.log("Hello from IIFE!");
+})();
 
-print("hi!");
+(() => {
+  console.log("arrow func");
+})();

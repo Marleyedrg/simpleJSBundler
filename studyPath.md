@@ -53,19 +53,6 @@ it creates the file, but it can't run, because hi is treated as variable, look t
 console.log(hi);
 ~~~
 
-### extra
-
-we can set a variable in bash too
-
-~~~sh
-MESSAGE="console.log(\"hi\")"
-~~~
-important to be together `MESSAGE="hi!"`
-
-~~~sh
-echo "$MESSAGE" > index.js
-~~~
-
 so lets continue with the project.
 
 we can run js in node right now, but it's commonJS, we "can't" use modules in nodeJS:
@@ -86,22 +73,20 @@ Try and you will see a error
 
 `SyntaxError: Cannot use import statement outside a module`
 
-### Your package.json file:
+## If you want use modules:
+### package.json file:
 ~~~json
 {
-  "name": "my-cool-app",
-  "version": "1.0.0",
+  //...
   "type": "module",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  }
+  //...
 }
 ~~~
-### Use the .mjs File Extension
-if you don't want to change your package.json, you can simply name them with the .mjs extension.
 
-Node.js will automatically treat any file ending in .mjs as an ES Module.
+### Use the .mjs File Extension
+if you don't want to change your package.json, you can simply name them with the `.mjs` extension.
+
+Node.js will automatically treat any file ending in `.mjs `as an ES Module.
 
 `Imports are Asynchronous: The ESM import statement is asynchronous, while the CommonJS require() is synchronous. This has performance implications, especially in large applications.`
 
@@ -115,6 +100,69 @@ The bundler outputs a file (or files) in a format that is compatible with your t
 
 
 ## IIFE (Immediately Invoked Function Expression)
+
+`self-executing anonymous function`
+
+[self-executing anonymous function](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)
+
 Is a JavaScript function that is created and then run immediately...
 
-It's a foundational pattern that module bundlers use to keep each of your files' code separate and safe from interfering with other files' code when they are all combined into a single bundle.
+~~~js
+// standard IIFE
+(function () {
+  // statements…
+})();
+
+// arrow function variant
+(() => {
+  // statements…
+})();
+
+// async IIFE
+(async () => {
+  // statements…
+})();
+~~~
+
+It's a foundational pattern that module bundlers use to keep each of your files code separate, safe from interfering with other files code when they are all combined into a single bundle.
+
+To create an IIFE, you define an anonymous function
+
+`function (){}, () => {0}`
+
+And wrapping the function definition in a pair of parentheses
+
+`The outer parentheses turn the function keyword into a function expression.`
+
+`( function (){} )`
+
+followed by another pair of parentheses () at the end. 
+
+`the final parentheses execute it right away`
+
+`(function (){})();`
+
+## but why instant exec? it is work on web page?
+
+Para entender isso o conceito-chave é Programação Orientada a Eventos (Event-Driven Programming).
+
+### Event-Driven Programming
+
+Think of it this way: 
+
+  - the flow of an interactive program `isn't a straight line from top to bottom`.
+
+  - The system first sets up listeners and then `waits`.
+
+  - The program only reacts when the user` triggers an event` (click, type, mouse movement).
+
+An IIFE is like setting up a temporary, private workbench. 
+
+##### why it do it?
+  
+  - scope
+
+
+
+
+
