@@ -142,9 +142,7 @@ followed by another pair of parentheses () at the end.
 
 `(function (){})();`
 
-## but why instant exec? it is work on web page?
-
-Para entender isso o conceito-chave é Programação Orientada a Eventos (Event-Driven Programming).
+##  If the code runs at the start, how can anything happen later?
 
 ### Event-Driven Programming
 
@@ -160,9 +158,10 @@ An IIFE is like setting up a temporary, private workbench.
 
 ##### why it do it?
   
-  - scope
+  - scope, it's the setup phase of functions on memore.
 
+keeping the main environment (the global scope) clean, and save the function on memore.
 
+Then the function is stored in a hidden way, waiting to be called, until it is triggered by an event.
 
-
-
+#### Closure
