@@ -128,19 +128,19 @@ It's a foundational pattern that module bundlers use to keep each of your files 
 
 To create an IIFE, you define an anonymous function
 
-`function (){}, () => {0}`
+`function (){} or  () => {0}`
 
-And wrapping the function definition in a pair of parentheses
+And wrapping the function definition in a pair of (parentheses)
 
 `The outer parentheses turn the function keyword into a function expression.`
 
 `( function (){} )`
 
-followed by another pair of parentheses () at the end. 
+followed by another pair of parentheses "( )" at the end. 
 
 `the final parentheses execute it right away`
 
-`(function (){})();`
+`(function (){})()`
 
 ##  If the code runs at the start, how can anything happen later?
 
@@ -154,14 +154,16 @@ Think of it this way:
 
   - The program only reacts when the user` triggers an event` (click, type, mouse movement).
 
-An IIFE is like setting up a temporary, private workbench. 
-
-##### why it do it?
+#### But what about when events are called and need to access the function? 
   
-  - scope, it's the setup phase of functions on memore.
+  - This setup save functions on memore.
 
-keeping the main environment (the global scope) clean, and save the function on memore.
+keeping the main environment (the global scope) clean.
 
 Then the function is stored in a hidden way, waiting to be called, until it is triggered by an event.
 
+`it's about performance, is better to load everything on startup, instead load at demand.`
+
 #### Closure
+
+[Closure mdn](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures)
