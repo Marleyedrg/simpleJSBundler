@@ -164,6 +164,8 @@ Then the function is stored in a hidden way, waiting to be called, until it is t
 
 `it's about performance, is better to load everything on startup, instead load at demand.`
 
-#### Closure
+### Abstract Syntax Tree (AST)
 
-[Closure mdn](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures)
+https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD
+
+
