@@ -166,6 +166,23 @@ Then the function is stored in a hidden way, waiting to be called, until it is t
 
 ### Abstract Syntax Tree (AST)
 
-https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD
+[https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD](https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD)
+
+[https://babeljs.io/docs/babel-parser](https://babeljs.io/docs/babel-parser)
+
+[https://astexplorer.net/](https://astexplorer.net/)
+
+![alt text](/studyPath/image.png)
+
+so i will build a simple code that do it, take a expression and build it on a "hierarchy".
+
+first i will build function to work with graphs on js.
+
+
+
+
+
+
+
 
 
