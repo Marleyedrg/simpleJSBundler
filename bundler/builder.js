@@ -9,10 +9,22 @@ const {transformFromAst} = require('babel-core');
 let ID = 0;
 
 function createAsset(filename) {
-  filename = path.join(__dirname, filename);
 
-  //Reads the contents of the file and saves it to a variable as a string.
-  const content = fs.readFileSync(filename, 'utf-8');
+  filePath = (path.join('src', filename)); 
+
+  let content;
+  try {
+    //Reads the contents of the file and saves it to a variable as a string.
+    content = fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      filename = filename + '.js'
+      filePath = filePath + '.js';
+      content = fs.readFileSync(filePath, 'utf-8');
+    } else {
+      throw err;
+    }
+  }
 
    //transforming our code into an Abstract Syntax Tree (AST).
   const ast = parse(content, {
@@ -44,6 +56,38 @@ function createAsset(filename) {
   };
 }
 
+function createGraph(entry) {
+  //Entry file.
+  const mainAsset = createAsset(entry);
+  //Queue init.
+  const queue = [mainAsset];
 
-console.log(createAsset('a.js'));
+  for (const asset of queue) {
+    //Creation of mapping to track dependecies.
+    asset.mapping = {};
+
+    const dirname = path.dirname(asset.filename);
+  
+    //Creating absolute paths.
+    asset.dependencies.map(relativePath => {
+            
+      const absolutePath = path.join(dirname, relativePath);
+      
+      const child = createAsset(absolutePath);
+      
+      asset.mapping[relativePath] = child.id;
+
+      queue.push(child);
+    });
+    
+  }
+  return queue;
+}
+
+
+// console.log(createAsset('a'));
+
+console.log(createGraph('index'));
+
+
 
