@@ -174,9 +174,41 @@ Then the function is stored in a hidden way, waiting to be called, until it is t
 
 ![alt text](/studyPath/image.png)
 
-so i will build a simple code that do it, take a expression and build it on a "hierarchy".
+### Babel
+~~~sh
+npm i @babel/parser
+~~~
 
-first i will build function to work with graphs on js.
+[https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD](https://www.youtube.com/watch?v=tM_S-pa4xDk&list=PLw5h0DiJ-9PCWamtYU7X220dlBSU94BdD)
+
+~~~js
+console.log(ast.program.body[0].expression.left.value); //2 
+
+console.log(ast.program.body[0].expression.right.left.value); //4
+
+console.log(ast.program.body[0].expression.right.right.value); //10
+~~~
+
+Here we can remember that image
+
+![alt text](/studyPath/image.png)
+
+It makes sense since 2 is on the far left, we just go left to access it, and so on.
+
+~~~sh
+npm install babel-core babel-preset-env babel-preset-es2015 babel-traverse 
+~~~
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,7 +1,3 @@
-(function() {
-  console.log("Hello from IIFE!");
-})();
-
-(() => {
-  console.log("arrow func");
-})();
+export function name(params) {
+    return arguments;
+}

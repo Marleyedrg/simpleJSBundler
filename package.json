@@ -14,9 +14,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/Marleyedrg/simpleJSBundler/issues"
   },
-  "homepage": "https://github.com/Marleyedrg/simpleJSBundler#readme"
+  "homepage": "https://github.com/Marleyedrg/simpleJSBundler#readme",
+  "dependencies": {
+    "@babel/parser": "^7.28.4",
+    "@babel/traverse": "^7.28.4",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-traverse": "^6.26.0"
+  }
 }
