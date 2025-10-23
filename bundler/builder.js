@@ -1,18 +1,25 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const {parse} = require('@babel/parser');
-const traverse = require('@babel/traverse').default;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const {transformFromAst} = require('babel-core');
+import * as parser from '@babel/parser';
+import traverse from '@babel/traverse';
+
+import { transformFromAst } from 'babel-core';
 
 let ID = 0;
 
+const srcPath = path.join(__dirname, '../src');
+
 function createAsset(filename) {
 
-  filePath = (path.join('src', filename)); 
+  let filePath = (path.join(srcPath, filename));
 
   let content;
+  
   try {
     //Reads the contents of the file and saves it to a variable as a string.
     content = fs.readFileSync(filePath, 'utf-8');
@@ -27,14 +34,14 @@ function createAsset(filename) {
   }
 
    //transforming our code into an Abstract Syntax Tree (AST).
-  const ast = parse(content, {
+  const ast = parser.parse(content, {
     sourceType: 'module',
   });
 
   const dependencies = [];
 
  //Searching the AST for dependencies.
-  traverse(ast, {
+  traverse.default(ast, {
     ImportDeclaration: ({node}) => {
       dependencies.push(node.source.value);
     },
@@ -84,10 +91,21 @@ function createGraph(entry) {
   return queue;
 }
 
+const filesSrc = fs.readdirSync(srcPath).filter(item => {
 
-// console.log(createAsset('a'));
+  const fullPath = path.join(srcPath, item);
+  
 
-console.log(createGraph('index'));
+  return fs.statSync(fullPath).isFile(); // only files
+});
 
+//console.log(createGraph('index'));
+console.log(filesSrc);
+
+for (let f of filesSrc){
+  
+  console.log(createGraph(f))
+
+}
 
 
