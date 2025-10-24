@@ -9,12 +9,17 @@ import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
 
 import { transformFromAst } from 'babel-core';
-import pkg from 'babel-preset-env'
 const srcPath = path.join(__dirname, '../src');
 
 let ID = 0
 
-const PRESET = ['env'];
+const removeModulesPlugin = () => ({
+  visitor: {
+    ImportDeclaration(path) {
+      path.remove();
+    },
+  }
+});
 
 const filesSrc = fs.readdirSync(srcPath).
   filter(item => {
@@ -22,7 +27,7 @@ const filesSrc = fs.readdirSync(srcPath).
     return fs.statSync(fullPath).isFile(); // only files
   });
 
-function createAsset(filename, PRESET) {
+function createAsset(filename) {
   let filePath = (path.join(srcPath, filename));
 
   let content;
@@ -56,8 +61,12 @@ function createAsset(filename, PRESET) {
   let id = ID++;
 
   const { code } = transformFromAst(ast, null, {
-    presets: ["env"],
-    // is a popular bundle of rules that converts modern Js into an older version (ES5) 
+    presets: [
+      ["env", {
+        modules: false
+      }]
+    ],
+    plugins: [removeModulesPlugin]
   });
 
   return {
@@ -127,6 +136,7 @@ function createBundle(relGraph) {
 
   str += mainCode;
 
+  str = str.replace(/export\s+/g, "");
 
   fs.writeFile('./dist/bundle.cjs', str, 'utf8', (err) => {
     if (err) throw err;
@@ -135,7 +145,7 @@ function createBundle(relGraph) {
 }
 
 // console.log(createGraph(filesSrc[0]))
-createBundle(createGraph(filesSrc[0]))
+createBundle(createGraph(filesSrc[0]));
 
 
 
