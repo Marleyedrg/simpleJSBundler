@@ -24,6 +24,10 @@ npm install
 
 Add your `.js` files inside the `/src` directory.
 
+Need to have a main file.
+`main.js`
+Currently, the code will only build (create bundle.js) from a single main file.
+
 ### 5. Build the bundle
 
 ```bash

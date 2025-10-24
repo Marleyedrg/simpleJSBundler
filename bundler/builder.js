@@ -23,11 +23,12 @@ const removeModulesPlugin = () => ({
   }
 });
 
-const filesSrc = fs.readdirSync(srcPath).
-  filter(item => {
-    const fullPath = path.join(srcPath, item);
-    return fs.statSync(fullPath).isFile(); // only files
-  });
+//maybe in the future :)
+// const filesSrc = fs.readdirSync(srcPath).
+//   filter(item => {
+//     const fullPath = path.join(srcPath, item);
+//     return fs.statSync(fullPath).isFile(); // only files
+//   });
 
 function createAsset(filename) {
   let filePath = (path.join(srcPath, filename));
@@ -86,7 +87,7 @@ function createGraph(entryFile) {
 
   const queue = [mainAsset];
 
-  const graph = new Map();
+  const graph = new Map(); //relationGraph
 
   const processed = new Map(); //filename -> asset
 
@@ -97,32 +98,33 @@ function createGraph(entryFile) {
 
     asset.mapping = {}; // dependency -> id
 
-    for (const itDp of asset.dependencies) {
+    for (const ittDp of asset.dependencies) {
 
-      let child = processed.get(itDp);
-      //dont rebuild assets
+      let child = processed.get(ittDp);
+      //dont rebuild assets, reuse it
 
       if (!child) {
-        child = createAsset(itDp);
+        child = createAsset(ittDp);
 
-        processed.set(itDp, child);
+        processed.set(ittDp, child);
 
         queue.push(child);
         /*
-          Note the relationship between itDp and child:
-          itDp: a dependency string being iterated (e.g., './sum.js')
+          Note the relationship between ittDp(like dependencieName) and child:
+          ittDp: a dependency string being iterated (e.g., './sum.js')
           child: the actual asset object corresponding to that dependency path We map the dependency string to the child asset's ID
         */
       }
 
-      asset.mapping[itDp] = child.id;
+      asset.mapping[ittDp] = child.id;
       //bracket notation, variable object key
     }
 
     graph.set(asset.id, asset);
+    // id -> asset
   }
 
-  return graph;
+  return graph;//relation graph
 }
 
 function createBundle(relGraph) {
@@ -135,10 +137,15 @@ function createBundle(relGraph) {
   for (let i = 0; i < dependencyDepth; i++) {
     str += relGraph.get(mapping[dependencies[i]]).code;
   }
-
+  /*
+  Dependencies, since they are organized in a queue-like order, end up being arranged in the correct declaration sequence — you’ll only need to place the main code at the end.
+  */
   str += mainCode;
 
   str = str.replace(/export\s+/g, "");
+  /*
+  At the end, the functions are declared with export at the beginning — we’re going to remove that.
+  */
 
   fs.writeFile('./dist/bundle.js', str, 'utf8', (err) => {
     if (err) throw err;
@@ -151,4 +158,4 @@ function build(file) {
 // MAINFILE = "main.js" in /src/main.js 
 build(MAINFILE);
 
-
+//Currently, the code will only build (create bundle.js) from a single main file.
