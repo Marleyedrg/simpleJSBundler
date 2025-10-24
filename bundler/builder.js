@@ -9,23 +9,29 @@ import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
 
 import { transformFromAst } from 'babel-core';
-
-let ID = 0;
-
+import pkg from 'babel-preset-env'
 const srcPath = path.join(__dirname, '../src');
 
-function createAsset(filename) {
+let ID = 0
 
+const PRESET = ['env'];
+
+const filesSrc = fs.readdirSync(srcPath).
+  filter(item => {
+    const fullPath = path.join(srcPath, item);
+    return fs.statSync(fullPath).isFile(); // only files
+  });
+
+function createAsset(filename, PRESET) {
   let filePath = (path.join(srcPath, filename));
 
   let content;
-  
+
   try {
     //Reads the contents of the file and saves it to a variable as a string.
     content = fs.readFileSync(filePath, 'utf-8');
   } catch (err) {
     if (err.code === 'ENOENT') {
-      filename = filename + '.js'
       filePath = filePath + '.js';
       content = fs.readFileSync(filePath, 'utf-8');
     } else {
@@ -33,25 +39,24 @@ function createAsset(filename) {
     }
   }
 
-   //transforming our code into an Abstract Syntax Tree (AST).
+  //transforming code into an Abstract Syntax Tree (AST).
   const ast = parser.parse(content, {
     sourceType: 'module',
   });
 
   const dependencies = [];
 
- //Searching the AST for dependencies.
+  //Searching the AST for dependencies.
   traverse.default(ast, {
-    ImportDeclaration: ({node}) => {
+    ImportDeclaration: ({ node }) => {
       dependencies.push(node.source.value);
     },
   });
 
-  const id = ID++;
-  //Transpilation to maintain compatibility.
+  let id = ID++;
 
-  const {code} = transformFromAst(ast, null, {
-    presets: ['env'],
+  const { code } = transformFromAst(ast, null, {
+    presets: ["env"],
     // is a popular bundle of rules that converts modern Js into an older version (ES5) 
   });
 
@@ -61,51 +66,76 @@ function createAsset(filename) {
     dependencies,
     code,
   };
+
 }
 
-function createGraph(entry) {
-  //Entry file.
-  const mainAsset = createAsset(entry);
-  //Queue init.
+
+function createGraph(entryFile) {
+  const mainAsset = createAsset(entryFile);
+
   const queue = [mainAsset];
 
-  for (const asset of queue) {
-    //Creation of mapping to track dependecies.
-    asset.mapping = {};
+  const graph = new Map();
 
-    const dirname = path.dirname(asset.filename);
-  
-    //Creating absolute paths.
-    asset.dependencies.map(relativePath => {
-            
-      const absolutePath = path.join(dirname, relativePath);
-      
-      const child = createAsset(absolutePath);
-      
-      asset.mapping[relativePath] = child.id;
+  const processed = new Map(); //filename -> asset
 
-      queue.push(child);
-    });
-    
+  processed.set(mainAsset.filename, mainAsset);
+
+  while (queue.length > 0) {
+    const asset = queue.shift();
+
+    asset.mapping = {}; // dependency -> id
+
+    for (const itDp of asset.dependencies) {
+
+      let child = processed.get(itDp);
+      //dont rebuild assets
+
+      if (!child) {
+        child = createAsset(itDp);
+
+        processed.set(itDp, child);
+
+        queue.push(child);
+        /*
+          Note the relationship between itDp and child:
+          itDp: a dependency string being iterated (e.g., './sum.js')
+          child: the actual asset object corresponding to that dependency path We map the dependency string to the child asset's ID
+        */
+      }
+
+      asset.mapping[itDp] = child.id;
+      //bracket notation, variable object key
+    }
+
+    graph.set(asset.id, asset);
   }
-  return queue;
+
+  return graph;
 }
 
-const filesSrc = fs.readdirSync(srcPath).filter(item => {
+function createBundle(relGraph) {
+  let str = "";
 
-  const fullPath = path.join(srcPath, item);
-  
+  let { code: mainCode, dependencies, mapping } = relGraph.get(0);
 
-  return fs.statSync(fullPath).isFile(); // only files
-});
+  let dependencyDepth = dependencies.length;
 
-//console.log(createGraph('index'));
-console.log(filesSrc);
+  for (let i = 0; i < dependencyDepth; i++) {
+    str += relGraph.get(mapping[dependencies[i]]).code;
+  }
 
-for (let f of filesSrc){
-  
-  console.log(createGraph(f))
+  str += mainCode;
 
+
+  fs.writeFile('./dist/bundle.cjs', str, 'utf8', (err) => {
+    if (err) throw err;
+    console.log('Bundle criado com sucesso!');
+  });
 }
+
+// console.log(createGraph(filesSrc[0]))
+createBundle(createGraph(filesSrc[0]))
+
 
 
