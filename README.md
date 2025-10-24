@@ -1,4 +1,4 @@
-# simpleJSBundler
+ # simpleJSBundler
 
 A simple project built to deepen understanding of how JavaScript module bundlers work under the hood.
  
