@@ -140,7 +140,7 @@ function createBundle(relGraph) {
 
   str = str.replace(/export\s+/g, "");
 
-  fs.writeFile('./dist/bundle.cjs', str, 'utf8', (err) => {
+  fs.writeFile('./dist/bundle.js', str, 'utf8', (err) => {
     if (err) throw err;
     console.log('Bundle criado com sucesso!');
   });
@@ -148,7 +148,7 @@ function createBundle(relGraph) {
 function build(file) {
   createBundle(createGraph(file));
 }
-
+// MAINFILE = "main.js" in /src/main.js 
 build(MAINFILE);
 
 
