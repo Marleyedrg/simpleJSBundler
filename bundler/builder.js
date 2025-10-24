@@ -13,6 +13,8 @@ const srcPath = path.join(__dirname, '../src');
 
 let ID = 0
 
+const MAINFILE = "main.js"
+
 const removeModulesPlugin = () => ({
   visitor: {
     ImportDeclaration(path) {
@@ -143,9 +145,10 @@ function createBundle(relGraph) {
     console.log('Bundle criado com sucesso!');
   });
 }
+function build(file) {
+  createBundle(createGraph(file));
+}
 
-// console.log(createGraph(filesSrc[0]))
-createBundle(createGraph(filesSrc[0]));
-
+build(MAINFILE);
 
 
