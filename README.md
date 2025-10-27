@@ -1,5 +1,8 @@
  # simpleJSBundler
 
+![modulos de código java script passam por um bundler e se tranformam em único codigo](https://raw.githubusercontent.com/Marleyedrg/imageslinks/refs/heads/main/JavaScript%20Bundling%20Process%20Diagram.jpg)
+
+
 A simple project built to deepen understanding of how JavaScript module bundlers work under the hood.
  
 ### 1. Clone the repository
